@@ -1,0 +1,17 @@
+{
+  "name": "pre1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "gulp": "gulp"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.23.5",
+    "connect-ssi": "^1.1.1",
+    "gulp": "^3.9.1"
+  },
+  "dependencies": {}
+}

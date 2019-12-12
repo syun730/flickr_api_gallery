@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Flickr API gallery</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="wrapper">
+    <div class="searchBtnGroup">
+      <input type="text" value="" placeholder="キーワードを入力してください" id="searchKeyword">
+      <button type="button" id="serchBtn">検索</button>
+    </div>
+
+    <div id="galleryList">
+      <div class="galleryListNav">
+        <button type="button" id="prev">＜</button>
+        <button type="button" id="next">＞</button>
+      </div>
+      <div id="galleryListInner"></div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
