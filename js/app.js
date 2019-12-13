@@ -83,27 +83,29 @@ serchBtn.addEventListener('click', () => {
 // nextボタン
 var next = document.getElementById('next');
 next.addEventListener('click', () => {
-  itemWidth = 240;
-  currentIndex++;
-  itemWidth *= currentIndex;
-  galleryListInner.style = `margin-left: -${itemWidth}px`;
-  if (currentIndex === galleryListItem.length) {
-    galleryListInner.style = 'margin-left: 0';
-    currentIndex = 0;
-  }
+  itemWidth = galleryListItem[0].clientWidth;
+  itemWidth *= -1;
+  galleryListItem[0].style = `margin-left: ${itemWidth}px`;
+
+  setTimeout(() => {
+    galleryListItem[0].style = 'margin-left: 0';
+    var itemFirst = document.querySelector('#galleryListInner .galleryListItem:first-child');
+    document.querySelector('#galleryListInner').append(itemFirst);
+  }, 250);
 });
 
 // prevボタン
 var prev = document.getElementById('prev');
 prev.addEventListener('click', () => {
-  itemWidth = 240;
-  currentIndex--;
-  itemWidth *= currentIndex;
-  galleryListInner.style = `margin-left: -${itemWidth}px`;
-  if (currentIndex < 0) {
-    currentIndex = galleryListItem.length - 1;
-    galleryListInner.style = `margin-left: ${itemWidth * currentIndex}px`;
-  }
+  itemWidth = galleryListItem[0].clientWidth;
+  itemWidth *= -1;
+  var itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
+  document.querySelector('#galleryListInner').prepend(itemLast);
+  galleryListItem[0].style = `margin-left: ${itemWidth}px`;
+
+  setTimeout(() => {
+    galleryListItem[0].style = 'margin-left: 0';
+  }, 250);
 });
 
 if (currentIndex === 0) {

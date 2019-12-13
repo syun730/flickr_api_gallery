@@ -59,6 +59,7 @@ img {
   flex-shrink: 0;
   width: 240px;
   text-align: center;
+  transition: .25s;
 }
 
 #prev,
