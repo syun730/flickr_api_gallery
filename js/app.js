@@ -10,12 +10,6 @@ var parameters = {
   nojsoncallback: 1 // コールバック関数呼び出さない
 };
 
-var currentIndex = 0;
-var itemWidth = 0;
-var galleryList = document.getElementById('galleryList');
-var galleryListInner = document.getElementById('galleryListInner');
-var galleryListItem = document.getElementsByClassName('galleryListItem');
-
 function searchFlickr() {
   var searchKeyword = document.getElementById('searchKeyword').value;
   parameters.text = searchKeyword;
@@ -23,7 +17,7 @@ function searchFlickr() {
 
   if (parameters.text === '') {
     alert('キーワードを入力してください');
-    return false;
+    return;
   }
 
   // オブジェクトを文字列に変換・&で繋ぐ
@@ -74,80 +68,81 @@ function searchFlickr() {
   xhr.send();
 }
 
+class BtnMove {
+  constructor() {
+    this.itemWidth;
+    this.galleryListItem = document.getElementsByClassName('galleryListItem');
+    this.galleryListInner = document.getElementById('galleryListInner');
+  }
+
+  prev() {
+    this.itemWidth = this.galleryListItem[0].clientWidth;
+    this.itemWidth *= -1;
+    this.itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
+    this.galleryListInner.prepend(this.itemLast);
+    this.galleryListItem[0].style = `margin-left: ${this.itemWidth}px`;
+
+    setTimeout(() => {
+      this.galleryListItem[0].style = 'margin-left: 0';
+    }, 150);
+  }
+
+  next() {
+    this.itemWidth = this.galleryListItem[0].clientWidth;
+    this.itemWidth *= -1;
+    this.galleryListItem[0].style = `margin-left: ${this.itemWidth}px`;
+
+    setTimeout(() => {
+      this.galleryListItem[0].style = 'margin-left: 0';
+      this.itemFirst = document.querySelector('#galleryListInner .galleryListItem:first-child');
+      this.galleryListInner.append(this.itemFirst);
+    }, 250);
+  }
+}
+
+var btnMove = new BtnMove();
+// nextボタン
+var next = document.getElementById('next');
+next.addEventListener('click', () => {
+  btnMove.next();
+});
+
+// prevボタン
+var prev = document.getElementById('prev');
+prev.addEventListener('click', () => {
+  btnMove.prev();
+});
+
+// スワイプ
+var galleryListInner = document.getElementById('galleryListInner');
+var startX;
+var endX;
+var dist = 30;
+galleryListInner.addEventListener('touchstart', (event) => {
+  startX = event.touches[0].pageX;
+});
+
+galleryListInner.addEventListener('touchmove', (event) => {
+  event.preventDefault();
+  endX = event.changedTouches[0].pageX;
+});
+
+galleryListInner.addEventListener('touchend', (event) => {
+  if (startX > endX + dist) { // 左スワイプ
+    btnMove.next();
+  } else if (startX + dist < endX) { // 右スワイプ
+    btnMove.prev();
+  }
+});
+
 // 検索ボタン
 var serchBtn = document.getElementById('serchBtn');
 serchBtn.addEventListener('click', () => {
   searchFlickr();
 });
 
-// nextボタン
-var next = document.getElementById('next');
-next.addEventListener('click', () => {
-  itemWidth = galleryListItem[0].clientWidth;
-  itemWidth *= -1;
-  galleryListItem[0].style = `margin-left: ${itemWidth}px`;
-
-  setTimeout(() => {
-    galleryListItem[0].style = 'margin-left: 0';
-    var itemFirst = document.querySelector('#galleryListInner .galleryListItem:first-child');
-    document.querySelector('#galleryListInner').append(itemFirst);
-  }, 250);
-});
-
-// prevボタン
-var prev = document.getElementById('prev');
-prev.addEventListener('click', () => {
-  itemWidth = galleryListItem[0].clientWidth;
-  itemWidth *= -1;
-  var itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
-  document.querySelector('#galleryListInner').prepend(itemLast);
-  galleryListItem[0].style = `margin-left: ${itemWidth}px`;
-
-  setTimeout(() => {
-    galleryListItem[0].style = 'margin-left: 0';
-  }, 150);
-});
-
+var currentIndex = 0;
 if (currentIndex === 0) {
   next.style = 'display: none';
   prev.style = 'display: none';
 }
-
-// スワイプ
-  var startX;
-  var endX;
-  var dist = 30;
-  galleryListInner.addEventListener('touchstart', (event) => {
-    startX = event.touches[0].pageX;
-    // console.log(startX);
-  });
-  galleryListInner.addEventListener('touchmove', (event) => {
-    event.preventDefault();
-    endX = event.changedTouches[0].pageX;
-    // console.log(endX);
-  });
-  galleryListInner.addEventListener('touchend', (event) => {
-    if (startX > endX + dist) { // 左スワイプ
-      // console.log('<<<?-左にスワイプされました');
-      itemWidth = galleryListItem[0].clientWidth;
-      itemWidth *= -1;
-      galleryListItem[0].style = `margin-left: ${itemWidth}px`;
-
-      setTimeout(() => {
-        galleryListItem[0].style = 'margin-left: 0';
-        var itemFirst = document.querySelector('#galleryListInner .galleryListItem:first-child');
-        document.querySelector('#galleryListInner').append(itemFirst);
-      }, 250);
-    } else if (startX + dist < endX) { // 右スワイプ
-      // console.log('右にスワイプされました?->>>');
-      itemWidth = galleryListItem[0].clientWidth;
-      itemWidth *= -1;
-      var itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
-      document.querySelector('#galleryListInner').prepend(itemLast);
-      galleryListItem[0].style = `margin-left: ${itemWidth}px`;
-
-      setTimeout(() => {
-        galleryListItem[0].style = 'margin-left: 0';
-      }, 150);
-    }
-  });
