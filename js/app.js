@@ -53,13 +53,10 @@ function searchFlickr() {
       // console.log(image);
       // console.log(index);
 
-      var img = document.createElement('img');
-      img.src = image.url_s;
-
       var galleryListItem = document.createElement('div');
       galleryListItem.classList.add('galleryListItem');
+      galleryListItem.style = `background-image: url(https://farm${image.farm}.staticflickr.com/${image.server}/${image.id}_${image.secret}_n.jpg);`;
       galleryListInner.appendChild(galleryListItem);
-      galleryListItem.appendChild(img);
     });
 
     next.style = 'display: block';
@@ -68,7 +65,7 @@ function searchFlickr() {
   xhr.send();
 }
 
-class BtnMove {
+class BtnList {
   constructor() {
     this.itemWidth;
     this.galleryListItem = document.getElementsByClassName('galleryListItem');
@@ -80,37 +77,37 @@ class BtnMove {
     this.itemWidth *= -1;
     this.itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
     this.galleryListInner.prepend(this.itemLast);
-    this.galleryListItem[0].style = `margin-left: ${this.itemWidth}px`;
+    this.galleryListItem[0].style.marginLeft = `${this.itemWidth}px`;
 
     setTimeout(() => {
-      this.galleryListItem[0].style = 'margin-left: 0';
+      this.galleryListItem[0].style.marginLeft = '0';
     }, 150);
   }
 
   next() {
     this.itemWidth = this.galleryListItem[0].clientWidth;
     this.itemWidth *= -1;
-    this.galleryListItem[0].style = `margin-left: ${this.itemWidth}px`;
+    this.galleryListItem[0].style.marginLeft = `${this.itemWidth}px`;
 
     setTimeout(() => {
-      this.galleryListItem[0].style = 'margin-left: 0';
+      this.galleryListItem[0].style.marginLeft = '0';
       this.itemFirst = document.querySelector('#galleryListInner .galleryListItem:first-child');
       this.galleryListInner.append(this.itemFirst);
     }, 250);
   }
 }
 
-var btnMove = new BtnMove();
+var btnList = new BtnList();
 // nextボタン
 var next = document.getElementById('next');
 next.addEventListener('click', () => {
-  btnMove.next();
+  btnList.next();
 });
 
 // prevボタン
 var prev = document.getElementById('prev');
 prev.addEventListener('click', () => {
-  btnMove.prev();
+  btnList.prev();
 });
 
 // スワイプ
@@ -129,13 +126,19 @@ galleryListInner.addEventListener('touchmove', (event) => {
 
 galleryListInner.addEventListener('touchend', (event) => {
   if (startX > endX + dist) { // 左スワイプ
-    btnMove.next();
+    btnList.next();
   } else if (startX + dist < endX) { // 右スワイプ
-    btnMove.prev();
+    btnList.prev();
   }
 });
 
 // 検索ボタン
+var searchKeyword = document.getElementById('searchKeyword');
+searchKeyword.addEventListener('keydown', (event) => {
+  if(event.keyCode === 13) {
+    searchFlickr();
+  }
+});
 var serchBtn = document.getElementById('serchBtn');
 serchBtn.addEventListener('click', () => {
   searchFlickr();

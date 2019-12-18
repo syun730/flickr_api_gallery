@@ -24,6 +24,7 @@ img {
 
 button {
   background: #fff;
+  user-select: none;
 }
 
 .searchBtnGroup {
@@ -62,7 +63,10 @@ button {
 .galleryListItem {
   flex-shrink: 0;
   width: 240px;
+  height: 240px;
   text-align: center;
+  background: center center no-repeat;
+  background-size: cover;
   transition: .25s;
 }
 
