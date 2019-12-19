@@ -57,6 +57,14 @@ function searchFlickr() {
       galleryListItem.classList.add('galleryListItem');
       galleryListItem.style = `background-image: url(https://farm${image.farm}.staticflickr.com/${image.server}/${image.id}_${image.secret}_n.jpg);`;
       galleryListInner.appendChild(galleryListItem);
+
+      if (index + 1 === images.length) {
+        itemWidth = document.querySelector('#galleryListInner .galleryListItem').clientWidth;
+        itemWidth *= -1;
+        itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
+        document.querySelector('#galleryListInner').prepend(itemLast);
+        document.querySelector('#galleryListInner .galleryListItem:first-child').style.marginLeft = `${itemWidth}px`;
+      }
     });
 
     next.style = 'display: block';
@@ -80,20 +88,22 @@ class BtnList {
     this.galleryListItem[0].style.marginLeft = `${this.itemWidth}px`;
 
     setTimeout(() => {
-      this.galleryListItem[0].style.marginLeft = '0';
-    }, 150);
+      this.galleryListItem[0].style.marginLeft = `${this.itemWidth}px`;
+      this.galleryListItem[1].style.marginLeft = '0';
+    }, 10);
   }
 
   next() {
     this.itemWidth = this.galleryListItem[0].clientWidth;
     this.itemWidth *= -1;
+    this.itemFirst = document.querySelector('#galleryListInner .galleryListItem:first-child');
+    this.galleryListInner.append(this.itemFirst);
     this.galleryListItem[0].style.marginLeft = `${this.itemWidth}px`;
 
     setTimeout(() => {
-      this.galleryListItem[0].style.marginLeft = '0';
-      this.itemFirst = document.querySelector('#galleryListInner .galleryListItem:first-child');
-      this.galleryListInner.append(this.itemFirst);
-    }, 250);
+      this.itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
+      this.itemLast.style.marginLeft = '0';
+    }, 10);
   }
 }
 
@@ -122,6 +132,8 @@ galleryListInner.addEventListener('touchstart', (event) => {
 galleryListInner.addEventListener('touchmove', (event) => {
   event.preventDefault();
   endX = event.changedTouches[0].pageX;
+  galleryListItem = document.getElementsByClassName('galleryListItem');
+  galleryListItem[0].style.marginLeft = -240 + parseInt(startX - endX) * -1  + 'px';
 });
 
 galleryListInner.addEventListener('touchend', (event) => {
