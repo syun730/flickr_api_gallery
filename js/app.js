@@ -83,32 +83,22 @@ class BtnList {
   prev() {
     this.itemWidth = this.galleryListItem[0].clientWidth;
     this.itemWidth *= -1;
+    this.galleryListItem[0].style.marginLeft = '0';
     this.itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
     this.galleryListInner.prepend(this.itemLast);
     this.galleryListItem[0].style.marginLeft = `${this.itemWidth}px`;
-    this.galleryListItem[1].style.marginLeft = '0';
+    this.galleryListItem[1].style.marginLeft = '';
   }
 
   next() {
     this.itemWidth = this.galleryListItem[0].clientWidth;
     this.itemWidth *= -1;
+    this.galleryListItem[0].style.marginLeft = `${this.itemWidth * 2}px`;
     this.itemFirst = document.querySelector('#galleryListInner .galleryListItem:first-child');
     this.galleryListInner.append(this.itemFirst);
     this.galleryListItem[0].style.marginLeft = `${this.itemWidth}px`;
     this.itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
-    this.itemLast.style.marginLeft = '0';
-  }
-
-  nextSwipe() {
-    this.itemWidth = this.galleryListItem[0].clientWidth;
-    this.itemWidth *= -1;
-    this.galleryListItem[0].style.marginLeft = `${this.itemWidth * -2} px`;
-    console.log();
-    this.itemFirst = document.querySelector('#galleryListInner .galleryListItem:first-child');
-    this.galleryListInner.append(this.itemFirst);
-    this.galleryListItem[0].style.marginLeft = `${this.itemWidth}px`;
-    this.itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
-    this.itemLast.style.marginLeft = '0';
+    this.itemLast.style.marginLeft = '';
   }
 }
 
@@ -116,12 +106,16 @@ var btnList = new BtnList();
 // nextボタン
 var next = document.getElementById('next');
 next.addEventListener('click', () => {
+  var galleryListItem = document.getElementsByClassName('galleryListItem');
+  galleryListItem[1].style.transition = 'all 0.25s ease 0s';
   btnList.next();
 });
 
 // prevボタン
 var prev = document.getElementById('prev');
 prev.addEventListener('click', () => {
+  var galleryListItem = document.getElementsByClassName('galleryListItem');
+  galleryListItem[0].style.transition = 'all 0.25s ease 0s';
   btnList.prev();
 });
 
@@ -138,16 +132,26 @@ galleryListInner.addEventListener('touchstart', (event) => {
 galleryListInner.addEventListener('touchmove', (event) => {
   endX = event.changedTouches[0].pageX;
   moveX = (startX - endX) * -1;
-  galleryListItem = document.getElementsByClassName('galleryListItem');
+  var galleryListItem = document.getElementsByClassName('galleryListItem');
   galleryListItem[0].style.marginLeft = itemWidth + moveX + 'px';
 });
 
 galleryListInner.addEventListener('touchend', (event) => {
+  var galleryListItem = document.getElementsByClassName('galleryListItem');
   if (moveX < -10) { // 左スワイプ
-    btnList.nextSwipe();
+    galleryListItem[1].style.transition = 'all 0.2s ease 0s';
+    btnList.next();
   } else if (moveX > 10) { // 右スワイプ
+    galleryListItem[0].style.transition = 'all 0.2s ease 0s';
     btnList.prev();
   }
+});
+
+// transition削除
+galleryListInner.addEventListener('webkitTransitionEnd', () => {
+  var galleryListItem = document.getElementsByClassName('galleryListItem');
+  galleryListItem[0].style.transition = '';
+  galleryListItem[1].style.transition = '';
 });
 
 // 検索ボタン

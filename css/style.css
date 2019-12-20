@@ -67,7 +67,7 @@ button {
   text-align: center;
   background: center center no-repeat;
   background-size: cover;
-  transition: .25s;
+  /* transition: .25s; */
 }
 
 #prev,
