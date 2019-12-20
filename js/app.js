@@ -86,11 +86,7 @@ class BtnList {
     this.itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
     this.galleryListInner.prepend(this.itemLast);
     this.galleryListItem[0].style.marginLeft = `${this.itemWidth}px`;
-
-    setTimeout(() => {
-      this.galleryListItem[0].style.marginLeft = `${this.itemWidth}px`;
-      this.galleryListItem[1].style.marginLeft = '0';
-    }, 10);
+    this.galleryListItem[1].style.marginLeft = '0';
   }
 
   next() {
@@ -99,11 +95,20 @@ class BtnList {
     this.itemFirst = document.querySelector('#galleryListInner .galleryListItem:first-child');
     this.galleryListInner.append(this.itemFirst);
     this.galleryListItem[0].style.marginLeft = `${this.itemWidth}px`;
+    this.itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
+    this.itemLast.style.marginLeft = '0';
+  }
 
-    setTimeout(() => {
-      this.itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
-      this.itemLast.style.marginLeft = '0';
-    }, 10);
+  nextSwipe() {
+    this.itemWidth = this.galleryListItem[0].clientWidth;
+    this.itemWidth *= -1;
+    this.galleryListItem[0].style.marginLeft = `${this.itemWidth * -2} px`;
+    console.log();
+    this.itemFirst = document.querySelector('#galleryListInner .galleryListItem:first-child');
+    this.galleryListInner.append(this.itemFirst);
+    this.galleryListItem[0].style.marginLeft = `${this.itemWidth}px`;
+    this.itemLast = document.querySelector('#galleryListInner .galleryListItem:last-child');
+    this.itemLast.style.marginLeft = '0';
   }
 }
 
@@ -124,22 +129,23 @@ prev.addEventListener('click', () => {
 var galleryListInner = document.getElementById('galleryListInner');
 var startX;
 var endX;
-var dist = 30;
+var moveX;
 galleryListInner.addEventListener('touchstart', (event) => {
+  event.preventDefault();
   startX = event.touches[0].pageX;
 });
 
 galleryListInner.addEventListener('touchmove', (event) => {
-  event.preventDefault();
   endX = event.changedTouches[0].pageX;
+  moveX = (startX - endX) * -1;
   galleryListItem = document.getElementsByClassName('galleryListItem');
-  galleryListItem[0].style.marginLeft = -240 + parseInt(startX - endX) * -1  + 'px';
+  galleryListItem[0].style.marginLeft = itemWidth + moveX + 'px';
 });
 
 galleryListInner.addEventListener('touchend', (event) => {
-  if (startX > endX + dist) { // 左スワイプ
-    btnList.next();
-  } else if (startX + dist < endX) { // 右スワイプ
+  if (moveX < -10) { // 左スワイプ
+    btnList.nextSwipe();
+  } else if (moveX > 10) { // 右スワイプ
     btnList.prev();
   }
 });
