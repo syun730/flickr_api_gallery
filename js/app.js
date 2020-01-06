@@ -34,8 +34,6 @@ function searchFlickr() {
 
   // jsonデータを取得
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', requestUrl);
-  xhr.responseType = 'json';
   xhr.addEventListener('load', () => {
     var jsonResponse = xhr.response;
     // console.log(jsonResponse);
@@ -70,6 +68,8 @@ function searchFlickr() {
     next.style = 'display: block';
     prev.style = 'display: block';
   });
+  xhr.open('GET', requestUrl);
+  xhr.responseType = 'json';
   xhr.send();
 }
 
